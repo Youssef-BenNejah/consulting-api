@@ -1,6 +1,6 @@
 services:
   maildev:
-    image: maildev/maildev:2
+    image: maildev/maildev:latest
     container_name: consultant-business-maildev
     ports:
       - "1025:1025" # SMTP
