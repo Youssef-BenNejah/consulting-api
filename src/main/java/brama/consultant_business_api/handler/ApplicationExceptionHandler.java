@@ -78,8 +78,7 @@ public class ApplicationExceptionHandler {
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(final Exception ex) {
-        log.info("Internal exception {}", ex.getMessage());
-        log.debug(ex.getMessage(), ex);
+        log.error("Unhandled exception", ex);
         final ErrorResponse body=ErrorResponse.builder()
                 .code(ErrorCode.INTERNAL_EXCEPTION.getCode())
                 .message(ErrorCode.INTERNAL_EXCEPTION.getDefaultMessage())

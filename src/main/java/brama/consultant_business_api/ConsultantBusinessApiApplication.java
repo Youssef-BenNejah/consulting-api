@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Optional;
 
 @SpringBootApplication
 public class ConsultantBusinessApiApplication {
@@ -18,8 +17,8 @@ public class ConsultantBusinessApiApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(final RoleRepository roleRepository) {
 		return args -> {
-			final Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
-			if (userRole.isEmpty()) {
+			final boolean userRoleExists = roleRepository.existsByName("USER");
+			if (!userRoleExists) {
 				final Role role = new Role();
 				role.setName("USER");
 				role.setCreatedBy("admin");

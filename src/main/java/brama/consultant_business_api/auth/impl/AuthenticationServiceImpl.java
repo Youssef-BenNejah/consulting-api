@@ -20,7 +20,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +55,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    @Transactional
     public void register(RegistrationRequest request) {
         checkUserEmail(request.getEmail());
         checkUserPhoneNumber(request.getPhoneNumber());
         checkPassword(request.getPassword(), request.getConfirmPassword());
 
-        final Role userRole = this.roleRepository.findByName("USER")
+        final Role userRole = this.roleRepository.findFirstByName("USER")
                 .orElseThrow(() -> new EntityNotFoundException("Role USER does not exist"));
 
         final List<String> roleIds = new ArrayList<>();
