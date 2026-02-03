@@ -1,6 +1,7 @@
 package brama.consultant_business_api.mail;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 public class OtpMailService {
     private final MailService mailService;
 
+    @Async
     public void sendOtp(final String email,
                         final String firstName,
                         final String otp,
