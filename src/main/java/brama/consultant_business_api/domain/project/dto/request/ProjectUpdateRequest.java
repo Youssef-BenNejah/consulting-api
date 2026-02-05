@@ -1,0 +1,42 @@
+package brama.consultant_business_api.domain.project.dto.request;
+
+import brama.consultant_business_api.domain.project.enums.HealthStatus;
+import brama.consultant_business_api.domain.project.enums.ProjectStatus;
+import brama.consultant_business_api.domain.project.enums.ProjectType;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProjectUpdateRequest {
+    private String projectId;
+    private String clientId;
+    private String clientName;
+    private String name;
+    private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private ProjectStatus status;
+    private ProjectType type;
+    @PositiveOrZero
+    private Double clientBudget;
+    @PositiveOrZero
+    private Double vendorCost;
+    @PositiveOrZero
+    private Double internalCost;
+    private HealthStatus healthStatus;
+    @Min(0)
+    @Max(100)
+    private Integer progress;
+}
