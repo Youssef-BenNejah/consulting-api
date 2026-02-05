@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 public final class PaginationUtils {
-    public static final int DEFAULT_PAGE = 1;
+    public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_SIZE = 20;
     public static final int MAX_SIZE = 200;
 
@@ -17,8 +17,7 @@ public final class PaginationUtils {
     public static Pageable toPageable(final Integer page, final Integer size, final Sort sort) {
         final int normalizedPage = normalizePage(page);
         final int normalizedSize = normalizeSize(size);
-        final int pageIndex = Math.max(normalizedPage, 1) - 1;
-        return PageRequest.of(pageIndex, normalizedSize, sort == null ? Sort.unsorted() : sort);
+        return PageRequest.of(normalizedPage, normalizedSize, sort == null ? Sort.unsorted() : sort);
     }
 
     public static int normalizePage(final Integer page) {
