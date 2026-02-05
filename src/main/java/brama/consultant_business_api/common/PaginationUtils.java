@@ -17,15 +17,16 @@ public final class PaginationUtils {
     public static Pageable toPageable(final Integer page, final Integer size, final Sort sort) {
         final int normalizedPage = normalizePage(page);
         final int normalizedSize = normalizeSize(size);
-        return PageRequest.of(normalizedPage - 1, normalizedSize, sort == null ? Sort.unsorted() : sort);
+        final int pageIndex = Math.max(normalizedPage, 1) - 1;
+        return PageRequest.of(pageIndex, normalizedSize, sort == null ? Sort.unsorted() : sort);
     }
 
     public static int normalizePage(final Integer page) {
         if (page == null) {
             return DEFAULT_PAGE;
         }
-        if (page < 1) {
-            throw new BusinessException(ErrorCode.INVALID_REQUEST, "page must be >= 1");
+        if (page < 0) {
+            throw new BusinessException(ErrorCode.INVALID_REQUEST, "page must be >= 0");
         }
         return page;
     }

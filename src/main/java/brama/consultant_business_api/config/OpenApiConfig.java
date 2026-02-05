@@ -211,7 +211,7 @@ public class OpenApiConfig {
         }
         if ("page".equalsIgnoreCase(name)) {
             if (schema.getMinimum() == null) {
-                schema.setMinimum(java.math.BigDecimal.ONE);
+                schema.setMinimum(java.math.BigDecimal.ZERO);
             }
         }
         if ("size".equalsIgnoreCase(name)) {
