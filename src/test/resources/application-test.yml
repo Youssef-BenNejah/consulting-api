@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI_TEST:mongodb+srv://youssef:LHMn1MSddYD8vHE5@adminfacter.r0rwc.mongodb.net/legy_test?retryWrites=true&w=majority}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+cloudinary:
+  enabled: false

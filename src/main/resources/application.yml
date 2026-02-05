@@ -19,8 +19,19 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_CLUSTER_URL}/${DB_NAME}?retryWrites=true&w=majority
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  jackson:
+    default-property-inclusion: non_null
 
-
+cloudinary:
+  enabled: ${CLOUDINARY_ENABLED:true}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:}
+  api-key: ${CLOUDINARY_API_KEY:}
+  api-secret: ${CLOUDINARY_API_SECRET:}
+  folder: ${CLOUDINARY_FOLDER:consulting-cherif}
 
 app:
   mail:
@@ -32,6 +43,4 @@ app:
       access-token-expiration: 86400000 # 24 hours for local testing
       refresh-token-expiration: 604800000 # 7 days
     disposable-email: 10minutemail,20minutemail,33mail,5ymail,anonbox,guerrillamail,mailinator,maildrop,mailnesia,moakt,my10minutemail,throwawaymail,trashmail,temp-mail,tempmail,truemail,yopmail
-
-
 

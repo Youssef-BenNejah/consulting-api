@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +56,10 @@ public class UserController {
     }
 
     private String getUserId(final Authentication authentication) {
-        return ((User) authentication.getPrincipal()).getId();
+        if (authentication == null || !(authentication.getPrincipal() instanceof User user)) {
+            throw new BadCredentialsException("Authentication required");
+        }
+        return user.getId();
     }
 }
 

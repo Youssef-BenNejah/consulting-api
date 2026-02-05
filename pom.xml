@@ -30,6 +30,7 @@
 		<java.version>17</java.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<openapi.version>2.7.0</openapi.version>
+		<cloudinary.version>1.38.0</cloudinary.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -76,6 +77,11 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${openapi.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>${cloudinary.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -110,6 +116,24 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.5.3</version>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
