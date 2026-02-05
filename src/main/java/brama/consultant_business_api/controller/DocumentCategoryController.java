@@ -31,6 +31,11 @@ public class DocumentCategoryController {
         return ApiResponse.ok(service.create(request));
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<DocumentCategoryResponse> getCategory(@PathVariable final String id) {
+        return ApiResponse.ok(service.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public ApiResponse<DocumentCategoryResponse> updateCategory(@PathVariable final String id,
                                                                 @Valid @RequestBody final DocumentCategoryUpdateRequest request) {

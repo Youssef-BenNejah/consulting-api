@@ -20,6 +20,8 @@ public interface ScheduleService {
 
     ScheduleResponse create(ScheduleCreateRequest request);
 
+    ScheduleResponse getById(String id);
+
     ScheduleResponse update(String id, ScheduleUpdateRequest request);
 
     void delete(String id);

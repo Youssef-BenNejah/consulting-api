@@ -62,13 +62,4 @@ public class Project extends BaseDocument {
 
     @Field("progress")
     private Integer progress;
-
-    @Field("open_tasks")
-    private Integer openTasks;
-
-    @Field("open_issues")
-    private Integer openIssues;
-
-    @Field("open_risks")
-    private Integer openRisks;
 }

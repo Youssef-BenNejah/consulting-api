@@ -59,6 +59,13 @@ public class CommunicationLogServiceImpl implements CommunicationLogService {
     }
 
     @Override
+    public CommunicationLogResponse getById(final String id) {
+        final CommunicationLog log = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Communication log not found: " + id));
+        return mapper.toResponse(log);
+    }
+
+    @Override
     public CommunicationLogResponse update(final String id, final CommunicationLogUpdateRequest request) {
         final CommunicationLog log = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Communication log not found: " + id));

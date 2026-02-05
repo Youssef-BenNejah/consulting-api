@@ -11,6 +11,8 @@ public interface DocumentCategoryService {
 
     DocumentCategoryResponse create(DocumentCategoryCreateRequest request);
 
+    DocumentCategoryResponse getById(String id);
+
     DocumentCategoryResponse update(String id, DocumentCategoryUpdateRequest request);
 
     void delete(String id);

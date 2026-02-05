@@ -61,9 +61,6 @@ class ProjectServiceImplTest {
                 .internalCost(100D)
                 .healthStatus(HealthStatus.GREEN)
                 .progress(10)
-                .openTasks(1)
-                .openIssues(0)
-                .openRisks(0)
                 .build();
 
         when(mongoTemplate.count(any(Query.class), eq(Project.class))).thenReturn(1L);
@@ -94,9 +91,6 @@ class ProjectServiceImplTest {
                 .internalCost(100D)
                 .healthStatus(HealthStatus.GREEN)
                 .progress(10)
-                .openTasks(1)
-                .openIssues(0)
-                .openRisks(0)
                 .build();
 
         when(repository.save(any(Project.class))).thenAnswer(invocation -> {

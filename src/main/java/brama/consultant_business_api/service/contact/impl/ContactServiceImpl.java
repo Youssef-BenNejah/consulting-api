@@ -68,6 +68,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public ContactResponse getById(final String id) {
+        final Contact contact = contactRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Contact not found: " + id));
+        return contactMapper.toResponse(contact);
+    }
+
+    @Override
     public ContactResponse update(final String id, final ContactUpdateRequest request) {
         final Contact contact = contactRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contact not found: " + id));

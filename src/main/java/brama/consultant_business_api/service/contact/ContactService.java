@@ -19,6 +19,8 @@ public interface ContactService {
                                         Integer page,
                                         Integer size);
 
+    ContactResponse getById(String id);
+
     ContactResponse update(String id, ContactUpdateRequest request);
 
     void delete(String id);

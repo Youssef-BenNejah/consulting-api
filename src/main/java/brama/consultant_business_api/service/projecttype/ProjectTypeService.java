@@ -11,6 +11,8 @@ public interface ProjectTypeService {
 
     ProjectTypeResponse create(ProjectTypeCreateRequest request);
 
+    ProjectTypeResponse getById(String id);
+
     ProjectTypeResponse update(String id, ProjectTypeUpdateRequest request);
 
     void delete(String id);

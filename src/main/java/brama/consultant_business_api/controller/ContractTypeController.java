@@ -31,6 +31,11 @@ public class ContractTypeController {
         return ApiResponse.ok(service.create(request));
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<ContractTypeResponse> getContractType(@PathVariable final String id) {
+        return ApiResponse.ok(service.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public ApiResponse<ContractTypeResponse> updateContractType(@PathVariable final String id,
                                                                 @Valid @RequestBody final ContractTypeUpdateRequest request) {

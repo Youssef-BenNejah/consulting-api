@@ -11,6 +11,8 @@ public interface ContractTypeService {
 
     ContractTypeResponse create(ContractTypeCreateRequest request);
 
+    ContractTypeResponse getById(String id);
+
     ContractTypeResponse update(String id, ContractTypeUpdateRequest request);
 
     void delete(String id);

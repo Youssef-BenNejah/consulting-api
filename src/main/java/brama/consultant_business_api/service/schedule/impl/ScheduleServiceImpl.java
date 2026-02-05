@@ -67,6 +67,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public ScheduleResponse getById(final String id) {
+        final ProjectSchedule schedule = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Schedule not found: " + id));
+        return mapper.toResponse(schedule);
+    }
+
+    @Override
     public ScheduleResponse update(final String id, final ScheduleUpdateRequest request) {
         final ProjectSchedule schedule = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Schedule not found: " + id));

@@ -27,9 +27,6 @@ public class ProjectMapper {
                 .internalCost(request.getInternalCost())
                 .healthStatus(request.getHealthStatus())
                 .progress(request.getProgress())
-                .openTasks(request.getOpenTasks())
-                .openIssues(request.getOpenIssues())
-                .openRisks(request.getOpenRisks())
                 .build();
     }
 
@@ -79,15 +76,6 @@ public class ProjectMapper {
         if (request.getProgress() != null) {
             project.setProgress(request.getProgress());
         }
-        if (request.getOpenTasks() != null) {
-            project.setOpenTasks(request.getOpenTasks());
-        }
-        if (request.getOpenIssues() != null) {
-            project.setOpenIssues(request.getOpenIssues());
-        }
-        if (request.getOpenRisks() != null) {
-            project.setOpenRisks(request.getOpenRisks());
-        }
     }
 
     public ProjectResponse toResponse(final Project project) {
@@ -110,9 +98,6 @@ public class ProjectMapper {
                 .internalCost(project.getInternalCost())
                 .healthStatus(project.getHealthStatus())
                 .progress(project.getProgress())
-                .openTasks(project.getOpenTasks())
-                .openIssues(project.getOpenIssues())
-                .openRisks(project.getOpenRisks())
                 .createdAt(project.getCreatedDate())
                 .updatedAt(project.getLastModifiedDate())
                 .build();

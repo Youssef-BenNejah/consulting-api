@@ -25,8 +25,15 @@ public enum ContactStatus {
 
     @JsonCreator
     public static ContactStatus fromValue(final String value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Unknown contact status: null");
+        }
+        final String normalized = value.trim()
+                .toLowerCase()
+                .replace("-", "_")
+                .replace(" ", "_");
         return Arrays.stream(ContactStatus.values())
-                .filter(v -> v.value.equalsIgnoreCase(value))
+                .filter(v -> v.value.equalsIgnoreCase(normalized))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown contact status: " + value));
     }

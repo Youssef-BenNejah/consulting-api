@@ -16,9 +16,4 @@ public class DashboardSummaryResponse {
     private long activeProjects;
     private ProjectsByHealthResponse projectsByHealth;
     private FinancialsResponse financials;
-    private PipelineResponse pipeline;
-    private long tasksOverdue;
-    private long milestonesOverdue;
-    private long openIssues;
-    private long criticalRisks;
 }

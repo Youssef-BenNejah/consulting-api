@@ -35,6 +35,13 @@ public class ContractTypeServiceImpl implements ContractTypeService {
     }
 
     @Override
+    public ContractTypeResponse getById(final String id) {
+        final ContractTypeConfig config = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Contract type not found: " + id));
+        return mapper.toResponse(config);
+    }
+
+    @Override
     public ContractTypeResponse update(final String id, final ContractTypeUpdateRequest request) {
         final ContractTypeConfig config = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contract type not found: " + id));

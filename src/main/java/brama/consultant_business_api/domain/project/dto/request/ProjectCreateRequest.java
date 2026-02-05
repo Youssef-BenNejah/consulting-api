@@ -55,13 +55,4 @@ public class ProjectCreateRequest {
     @Min(0)
     @Max(100)
     private Integer progress;
-    @NotNull
-    @PositiveOrZero
-    private Integer openTasks;
-    @NotNull
-    @PositiveOrZero
-    private Integer openIssues;
-    @NotNull
-    @PositiveOrZero
-    private Integer openRisks;
 }

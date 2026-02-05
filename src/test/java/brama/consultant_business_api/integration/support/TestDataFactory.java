@@ -2,8 +2,6 @@ package brama.consultant_business_api.integration.support;
 
 import brama.consultant_business_api.domain.client.dto.request.ClientCreateRequest;
 import brama.consultant_business_api.domain.client.dto.request.ClientUpdateRequest;
-import brama.consultant_business_api.domain.common.enums.Priority;
-import brama.consultant_business_api.domain.common.enums.StoryStatus;
 import brama.consultant_business_api.domain.communication.dto.request.CommunicationLogCreateRequest;
 import brama.consultant_business_api.domain.communication.enums.CommunicationType;
 import brama.consultant_business_api.domain.contact.dto.request.ContactCreateRequest;
@@ -14,33 +12,19 @@ import brama.consultant_business_api.domain.contracttype.dto.request.ContractTyp
 import brama.consultant_business_api.domain.document.dto.request.DocumentCreateRequest;
 import brama.consultant_business_api.domain.document.enums.DocumentCategoryKey;
 import brama.consultant_business_api.domain.documentcategory.dto.request.DocumentCategoryCreateRequest;
-import brama.consultant_business_api.domain.epic.dto.request.EpicCreateRequest;
 import brama.consultant_business_api.domain.invoice.dto.request.InvoiceCreateRequest;
 import brama.consultant_business_api.domain.invoice.dto.request.InvoiceItemRequest;
 import brama.consultant_business_api.domain.invoice.dto.request.InvoiceStatusUpdateRequest;
 import brama.consultant_business_api.domain.invoice.dto.request.InvoiceUpdateRequest;
 import brama.consultant_business_api.domain.invoice.enums.InvoiceStatus;
-import brama.consultant_business_api.domain.issue.dto.request.IssueCreateRequest;
-import brama.consultant_business_api.domain.issue.enums.IssueSeverity;
-import brama.consultant_business_api.domain.issue.enums.IssueStatus;
-import brama.consultant_business_api.domain.milestone.dto.request.MilestoneCreateRequest;
-import brama.consultant_business_api.domain.milestone.enums.MilestoneStatus;
-import brama.consultant_business_api.domain.opportunity.dto.request.OpportunityCreateRequest;
-import brama.consultant_business_api.domain.opportunity.enums.OpportunityStage;
 import brama.consultant_business_api.domain.project.dto.request.ProjectCreateRequest;
 import brama.consultant_business_api.domain.project.dto.request.ProjectUpdateRequest;
 import brama.consultant_business_api.domain.project.enums.HealthStatus;
 import brama.consultant_business_api.domain.project.enums.ProjectStatus;
 import brama.consultant_business_api.domain.project.enums.ProjectType;
 import brama.consultant_business_api.domain.projecttype.dto.request.ProjectTypeCreateRequest;
-import brama.consultant_business_api.domain.risk.dto.request.RiskCreateRequest;
-import brama.consultant_business_api.domain.risk.enums.RiskStatus;
 import brama.consultant_business_api.domain.schedule.dto.request.ScheduleCreateRequest;
 import brama.consultant_business_api.domain.schedule.dto.request.ScheduleUpdateRequest;
-import brama.consultant_business_api.domain.task.dto.request.TaskCreateRequest;
-import brama.consultant_business_api.domain.task.enums.OwnerType;
-import brama.consultant_business_api.domain.task.enums.TaskStatus;
-import brama.consultant_business_api.domain.userstory.dto.request.UserStoryCreateRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -86,9 +70,6 @@ public final class TestDataFactory {
                 .internalCost(30000D)
                 .healthStatus(HealthStatus.GREEN)
                 .progress(20)
-                .openTasks(5)
-                .openIssues(1)
-                .openRisks(1)
                 .build();
     }
 
@@ -100,63 +81,6 @@ public final class TestDataFactory {
                 .build();
     }
 
-    public static MilestoneCreateRequest milestoneCreateRequest(final String projectId, final String projectName) {
-        return MilestoneCreateRequest.builder()
-                .name("Discovery Complete")
-                .projectId(projectId)
-                .projectName(projectName)
-                .dueDate(LocalDate.now().plusDays(7))
-                .deliverable("Discovery report")
-                .acceptanceCriteria("Stakeholder sign-off")
-                .status(MilestoneStatus.PENDING)
-                .signOffBy("Lead PM")
-                .build();
-    }
-
-    public static TaskCreateRequest taskCreateRequest(final String projectId, final String projectName) {
-        return TaskCreateRequest.builder()
-                .title("Create migration plan")
-                .description("Draft the migration plan")
-                .projectId(projectId)
-                .projectName(projectName)
-                .owner("Alice")
-                .ownerType(OwnerType.INTERNAL)
-                .dueDate(LocalDate.now().plusDays(3))
-                .status(TaskStatus.TODO)
-                .priority(Priority.MUST)
-                .estimatedHours(16D)
-                .actualHours(0D)
-                .build();
-    }
-
-    public static IssueCreateRequest issueCreateRequest(final String projectId, final String projectName) {
-        return IssueCreateRequest.builder()
-                .title("Legacy dependency")
-                .description("Dependency needs upgrade")
-                .projectId(projectId)
-                .projectName(projectName)
-                .severity(IssueSeverity.MEDIUM)
-                .owner("Bob")
-                .mitigationPlan("Upgrade library")
-                .dueDate(LocalDate.now().plusDays(5))
-                .status(IssueStatus.OPEN)
-                .build();
-    }
-
-    public static RiskCreateRequest riskCreateRequest(final String projectId, final String projectName) {
-        return RiskCreateRequest.builder()
-                .title("Scope creep")
-                .description("Scope may increase")
-                .projectId(projectId)
-                .projectName(projectName)
-                .probability(30D)
-                .impact(60D)
-                .owner("Claire")
-                .mitigationPlan("Strict change control")
-                .dueDate(LocalDate.now().plusDays(10))
-                .status(RiskStatus.IDENTIFIED)
-                .build();
-    }
 
     public static InvoiceCreateRequest invoiceCreateRequest(final String projectId, final String projectName, final String clientId, final String clientName) {
         final InvoiceItemRequest item1 = InvoiceItemRequest.builder()
@@ -240,19 +164,6 @@ public final class TestDataFactory {
                 .build();
     }
 
-    public static OpportunityCreateRequest opportunityCreateRequest(final String clientId, final String clientName) {
-        return OpportunityCreateRequest.builder()
-                .clientId(clientId)
-                .clientName(clientName)
-                .title("New rollout")
-                .expectedValue(90000D)
-                .probability(45D)
-                .stage(OpportunityStage.PROPOSAL)
-                .expectedCloseDate(LocalDate.now().plusDays(20))
-                .notes("Awaiting review")
-                .build();
-    }
-
     public static CommunicationLogCreateRequest communicationLogCreateRequest(final String clientId, final String clientName,
                                                                               final String projectId, final String projectName) {
         return CommunicationLogCreateRequest.builder()
@@ -265,36 +176,6 @@ public final class TestDataFactory {
                 .summary("Weekly sync")
                 .actionItems(List.of("Send summary", "Prepare slides"))
                 .participants(List.of("Alice", "Bob"))
-                .build();
-    }
-
-    public static EpicCreateRequest epicCreateRequest(final String projectId, final String projectName) {
-        return EpicCreateRequest.builder()
-                .projectId(projectId)
-                .projectName(projectName)
-                .title("Platform Migration")
-                .description("Migrate core services")
-                .priority(Priority.MUST)
-                .status(StoryStatus.IN_PROGRESS)
-                .progress(15)
-                .storyCount(4)
-                .build();
-    }
-
-    public static UserStoryCreateRequest userStoryCreateRequest(final String epicId, final String epicTitle,
-                                                                final String projectId, final String projectName) {
-        return UserStoryCreateRequest.builder()
-                .epicId(epicId)
-                .epicTitle(epicTitle)
-                .projectId(projectId)
-                .projectName(projectName)
-                .title("Migrate auth module")
-                .description("Port auth service to new stack")
-                .acceptanceCriteria(List.of("All tests pass", "No downtime"))
-                .priority(Priority.MUST)
-                .status(StoryStatus.BACKLOG)
-                .effort(8)
-                .notes("Needs security review")
                 .build();
     }
 

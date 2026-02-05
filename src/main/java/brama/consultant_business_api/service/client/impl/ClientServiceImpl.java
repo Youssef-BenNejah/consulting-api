@@ -9,7 +9,9 @@ import brama.consultant_business_api.domain.client.dto.request.ClientUpdateReque
 import brama.consultant_business_api.domain.client.dto.response.ClientResponse;
 import brama.consultant_business_api.domain.client.mapper.ClientMapper;
 import brama.consultant_business_api.domain.client.model.Client;
+import brama.consultant_business_api.exception.BusinessException;
 import brama.consultant_business_api.exception.EntityNotFoundException;
+import brama.consultant_business_api.exception.ErrorCode;
 import brama.consultant_business_api.repository.ClientRepository;
 import brama.consultant_business_api.service.client.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +75,9 @@ public class ClientServiceImpl implements ClientService {
     public ClientResponse update(final String id, final ClientUpdateRequest request) {
         final Client client = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found: " + id));
+        if (isEmptyUpdate(request)) {
+            throw new BusinessException(ErrorCode.INVALID_REQUEST, "empty update payload");
+        }
         mapper.merge(client, request);
         final Client saved = repository.save(client);
         return mapper.toResponse(saved);
@@ -84,5 +89,17 @@ public class ClientServiceImpl implements ClientService {
             throw new EntityNotFoundException("Client not found: " + id);
         }
         repository.deleteById(id);
+    }
+
+    private boolean isEmptyUpdate(final ClientUpdateRequest request) {
+        return request.getName() == null
+                && request.getIndustry() == null
+                && request.getCountry() == null
+                && request.getPrimaryContact() == null
+                && request.getEmail() == null
+                && request.getPhone() == null
+                && request.getContractType() == null
+                && request.getNotes() == null
+                && request.getTags() == null;
     }
 }

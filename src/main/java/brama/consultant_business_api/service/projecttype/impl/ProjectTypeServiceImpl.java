@@ -35,6 +35,13 @@ public class ProjectTypeServiceImpl implements ProjectTypeService {
     }
 
     @Override
+    public ProjectTypeResponse getById(final String id) {
+        final ProjectTypeConfig config = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Project type not found: " + id));
+        return mapper.toResponse(config);
+    }
+
+    @Override
     public ProjectTypeResponse update(final String id, final ProjectTypeUpdateRequest request) {
         final ProjectTypeConfig config = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Project type not found: " + id));

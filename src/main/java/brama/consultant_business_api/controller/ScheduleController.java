@@ -55,6 +55,11 @@ public class ScheduleController {
         return ApiResponse.ok(service.create(request));
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<ScheduleResponse> getSchedule(@PathVariable final String id) {
+        return ApiResponse.ok(service.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public ApiResponse<ScheduleResponse> updateSchedule(@PathVariable final String id,
                                                         @Valid @RequestBody final ScheduleUpdateRequest request) {

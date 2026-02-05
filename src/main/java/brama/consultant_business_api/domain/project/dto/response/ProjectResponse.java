@@ -33,9 +33,6 @@ public class ProjectResponse {
     private Double internalCost;
     private HealthStatus healthStatus;
     private Integer progress;
-    private Integer openTasks;
-    private Integer openIssues;
-    private Integer openRisks;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

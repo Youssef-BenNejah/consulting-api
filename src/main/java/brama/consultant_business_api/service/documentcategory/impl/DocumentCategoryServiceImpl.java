@@ -35,6 +35,13 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
     }
 
     @Override
+    public DocumentCategoryResponse getById(final String id) {
+        final DocumentCategory category = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Document category not found: " + id));
+        return mapper.toResponse(category);
+    }
+
+    @Override
     public DocumentCategoryResponse update(final String id, final DocumentCategoryUpdateRequest request) {
         final DocumentCategory category = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Document category not found: " + id));

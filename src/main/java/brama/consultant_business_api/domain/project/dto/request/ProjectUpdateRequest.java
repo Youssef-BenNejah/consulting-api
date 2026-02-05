@@ -39,10 +39,4 @@ public class ProjectUpdateRequest {
     @Min(0)
     @Max(100)
     private Integer progress;
-    @PositiveOrZero
-    private Integer openTasks;
-    @PositiveOrZero
-    private Integer openIssues;
-    @PositiveOrZero
-    private Integer openRisks;
 }

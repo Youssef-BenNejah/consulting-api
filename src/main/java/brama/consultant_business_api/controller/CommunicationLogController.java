@@ -48,6 +48,11 @@ public class CommunicationLogController {
         return ApiResponse.ok(service.create(request));
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<CommunicationLogResponse> getLog(@PathVariable final String id) {
+        return ApiResponse.ok(service.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public ApiResponse<CommunicationLogResponse> updateLog(@PathVariable final String id,
                                                            @Valid @RequestBody final CommunicationLogUpdateRequest request) {

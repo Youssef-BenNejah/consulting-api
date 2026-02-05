@@ -17,6 +17,8 @@ public interface CommunicationLogService {
 
     CommunicationLogResponse create(CommunicationLogCreateRequest request);
 
+    CommunicationLogResponse getById(String id);
+
     CommunicationLogResponse update(String id, CommunicationLogUpdateRequest request);
 
     void delete(String id);

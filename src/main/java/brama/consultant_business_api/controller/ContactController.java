@@ -48,6 +48,11 @@ public class ContactController {
         return ApiResponse.of(result.getItems(), meta);
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<ContactResponse> getContact(@PathVariable final String id) {
+        return ApiResponse.ok(service.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public ApiResponse<ContactResponse> updateContact(@PathVariable final String id,
                                                       @Valid @RequestBody final ContactUpdateRequest request) {
