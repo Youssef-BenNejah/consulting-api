@@ -3,7 +3,6 @@ package brama.consultant_business_api.service.report.impl;
 import brama.consultant_business_api.domain.invoice.enums.InvoiceStatus;
 import brama.consultant_business_api.domain.invoice.model.Invoice;
 import brama.consultant_business_api.domain.project.dto.response.ProjectResponse;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
 import brama.consultant_business_api.domain.project.mapper.ProjectMapper;
 import brama.consultant_business_api.domain.project.model.Project;
 import brama.consultant_business_api.domain.report.dto.response.InvoicesReportResponse;
@@ -14,8 +13,12 @@ import brama.consultant_business_api.domain.report.dto.response.ProjectsReportRe
 import brama.consultant_business_api.domain.report.dto.response.ReportsOverviewResponse;
 import brama.consultant_business_api.domain.invoice.dto.response.InvoiceResponse;
 import brama.consultant_business_api.domain.invoice.mapper.InvoiceMapper;
+import brama.consultant_business_api.domain.settings.catalog.SettingsCatalogDefaults;
+import brama.consultant_business_api.domain.settings.catalog.model.SettingsCatalog;
+import brama.consultant_business_api.domain.settings.catalog.model.SettingsProjectStatus;
 import brama.consultant_business_api.repository.InvoiceRepository;
 import brama.consultant_business_api.repository.ProjectRepository;
+import brama.consultant_business_api.repository.SettingsCatalogRepository;
 import brama.consultant_business_api.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ public class ReportServiceImpl implements ReportService {
     private final InvoiceRepository invoiceRepository;
     private final ProjectMapper projectMapper;
     private final InvoiceMapper invoiceMapper;
+    private final SettingsCatalogRepository settingsCatalogRepository;
 
     @Override
     public ReportsOverviewResponse getOverview() {
@@ -71,15 +75,21 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ProjectsReportResponse getProjectsReport() {
         final List<Project> projects = projectRepository.findAll();
+        final SettingsCatalog catalog = settingsCatalogRepository.findById(SettingsCatalogDefaults.CATALOG_ID)
+                .orElseGet(SettingsCatalogDefaults::defaultCatalog);
+        final String deliveryId = resolveStatusIdByKey(catalog, "delivery");
+        final String discoveryId = resolveStatusIdByKey(catalog, "discovery");
+        final String reviewId = resolveStatusIdByKey(catalog, "review");
+        final String closedId = resolveStatusIdByKey(catalog, "closed");
         final ProjectStatusCountsResponse counts = ProjectStatusCountsResponse.builder()
-                .delivery(projects.stream().filter(p -> p.getStatus() == ProjectStatus.DELIVERY).count())
-                .discovery(projects.stream().filter(p -> p.getStatus() == ProjectStatus.DISCOVERY).count())
-                .review(projects.stream().filter(p -> p.getStatus() == ProjectStatus.REVIEW).count())
-                .closed(projects.stream().filter(p -> p.getStatus() == ProjectStatus.CLOSED).count())
-                .other(projects.stream().filter(p -> p.getStatus() != ProjectStatus.DELIVERY
-                        && p.getStatus() != ProjectStatus.DISCOVERY
-                        && p.getStatus() != ProjectStatus.REVIEW
-                        && p.getStatus() != ProjectStatus.CLOSED).count())
+                .delivery(projects.stream().filter(p -> matchesStatus(p.getStatusId(), deliveryId)).count())
+                .discovery(projects.stream().filter(p -> matchesStatus(p.getStatusId(), discoveryId)).count())
+                .review(projects.stream().filter(p -> matchesStatus(p.getStatusId(), reviewId)).count())
+                .closed(projects.stream().filter(p -> matchesStatus(p.getStatusId(), closedId)).count())
+                .other(projects.stream().filter(p -> !matchesStatus(p.getStatusId(), deliveryId)
+                        && !matchesStatus(p.getStatusId(), discoveryId)
+                        && !matchesStatus(p.getStatusId(), reviewId)
+                        && !matchesStatus(p.getStatusId(), closedId)).count())
                 .build();
 
         final List<ProjectResponse> projectResponses = projects.stream()
@@ -167,5 +177,21 @@ public class ReportServiceImpl implements ReportService {
             return value > 0 ? Double.MAX_VALUE : -Double.MAX_VALUE;
         }
         return value;
+    }
+
+    private String resolveStatusIdByKey(final SettingsCatalog catalog, final String key) {
+        if (catalog == null || catalog.getProjectStatuses() == null || key == null) {
+            return null;
+        }
+        for (SettingsProjectStatus status : catalog.getProjectStatuses()) {
+            if (status != null && status.getKey() != null && status.getKey().equalsIgnoreCase(key)) {
+                return status.getId();
+            }
+        }
+        return null;
+    }
+
+    private boolean matchesStatus(final String statusId, final String targetId) {
+        return statusId != null && targetId != null && statusId.equals(targetId);
     }
 }

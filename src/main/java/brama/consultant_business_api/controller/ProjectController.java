@@ -8,8 +8,6 @@ import brama.consultant_business_api.domain.project.dto.request.ProjectCreateReq
 import brama.consultant_business_api.domain.project.dto.request.ProjectUpdateRequest;
 import brama.consultant_business_api.domain.project.dto.response.ProjectResponse;
 import brama.consultant_business_api.domain.project.enums.HealthStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectType;
 import brama.consultant_business_api.service.project.ProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,9 +29,11 @@ public class ProjectController {
     @GetMapping
     public ApiResponse<List<ProjectResponse>> listProjects(
             @RequestParam(required = false) final String search,
-            @RequestParam(required = false) final ProjectStatus status,
+            @RequestParam(required = false) final String statusId,
             @RequestParam(required = false) final String clientId,
-            @RequestParam(required = false) final ProjectType type,
+            @RequestParam(required = false) final String projectTypeId,
+            @RequestParam(required = false) final String priorityId,
+            @RequestParam(required = false) final String tagId,
             @RequestParam(required = false) final HealthStatus healthStatus,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate dateFrom,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate dateTo,
@@ -41,7 +41,8 @@ public class ProjectController {
             @RequestParam(required = false) final Integer size,
             @RequestParam(required = false) final String sort) {
         final PagedResult<ProjectResponse> result = service.search(
-                search, status, clientId, type, healthStatus, dateFrom, dateTo, page, size, sort);
+                search, statusId, clientId, projectTypeId, priorityId, tagId,
+                healthStatus, dateFrom, dateTo, page, size, sort);
         final PageMeta meta = PageMeta.builder()
                 .page(PaginationUtils.normalizePage(page))
                 .size(PaginationUtils.normalizeSize(size))

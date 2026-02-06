@@ -20,8 +20,11 @@ public class ProjectMapper {
                 .description(request.getDescription())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
-                .status(request.getStatus())
-                .type(request.getType())
+                .statusId(request.getStatusId())
+                .projectTypeId(request.getProjectTypeId())
+                .priorityId(request.getPriorityId())
+                .tagIds(request.getTagIds())
+                .contractTypeId(request.getContractTypeId())
                 .clientBudget(request.getClientBudget())
                 .vendorCost(request.getVendorCost())
                 .internalCost(request.getInternalCost())
@@ -55,11 +58,20 @@ public class ProjectMapper {
         if (request.getEndDate() != null) {
             project.setEndDate(request.getEndDate());
         }
-        if (request.getStatus() != null) {
-            project.setStatus(request.getStatus());
+        if (request.getStatusId() != null) {
+            project.setStatusId(request.getStatusId());
         }
-        if (request.getType() != null) {
-            project.setType(request.getType());
+        if (request.getProjectTypeId() != null) {
+            project.setProjectTypeId(request.getProjectTypeId());
+        }
+        if (request.getPriorityId() != null) {
+            project.setPriorityId(request.getPriorityId());
+        }
+        if (request.getTagIds() != null) {
+            project.setTagIds(request.getTagIds());
+        }
+        if (request.getContractTypeId() != null) {
+            project.setContractTypeId(request.getContractTypeId());
         }
         if (request.getClientBudget() != null) {
             project.setClientBudget(request.getClientBudget());
@@ -91,8 +103,11 @@ public class ProjectMapper {
                 .description(project.getDescription())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
-                .status(project.getStatus())
-                .type(project.getType())
+                .statusId(project.getStatusId())
+                .projectTypeId(project.getProjectTypeId())
+                .priorityId(project.getPriorityId())
+                .tagIds(project.getTagIds())
+                .contractTypeId(project.getContractTypeId())
                 .clientBudget(project.getClientBudget())
                 .vendorCost(project.getVendorCost())
                 .internalCost(project.getInternalCost())

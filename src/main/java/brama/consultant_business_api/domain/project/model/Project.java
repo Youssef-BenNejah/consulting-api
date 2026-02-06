@@ -2,8 +2,6 @@ package brama.consultant_business_api.domain.project.model;
 
 import brama.consultant_business_api.common.BaseDocument;
 import brama.consultant_business_api.domain.project.enums.HealthStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,11 +41,20 @@ public class Project extends BaseDocument {
     @Field("end_date")
     private LocalDate endDate;
 
-    @Field("status")
-    private ProjectStatus status;
+    @Field("status_id")
+    private String statusId;
 
-    @Field("type")
-    private ProjectType type;
+    @Field("project_type_id")
+    private String projectTypeId;
+
+    @Field("priority_id")
+    private String priorityId;
+
+    @Field("tag_ids")
+    private List<String> tagIds;
+
+    @Field("contract_type_id")
+    private String contractTypeId;
 
     @Field("client_budget")
     private Double clientBudget;

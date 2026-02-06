@@ -1,7 +1,6 @@
 package brama.consultant_business_api.service.schedule;
 
 import brama.consultant_business_api.common.PagedResult;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
 import brama.consultant_business_api.domain.schedule.dto.request.ScheduleCreateRequest;
 import brama.consultant_business_api.domain.schedule.dto.request.ScheduleUpdateRequest;
 import brama.consultant_business_api.domain.schedule.dto.response.ScheduleResponse;
@@ -12,7 +11,7 @@ public interface ScheduleService {
     PagedResult<ScheduleResponse> search(String search,
                                          String clientId,
                                          String projectId,
-                                         ProjectStatus projectStatus,
+                                         String projectStatusId,
                                          LocalDate dateFrom,
                                          LocalDate dateTo,
                                          Integer page,
@@ -29,7 +28,7 @@ public interface ScheduleService {
     byte[] exportCsv(String search,
                      String clientId,
                      String projectId,
-                     ProjectStatus projectStatus,
+                     String projectStatusId,
                      LocalDate dateFrom,
                      LocalDate dateTo);
 }

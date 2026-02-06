@@ -6,6 +6,7 @@ import brama.consultant_business_api.domain.documentcategory.dto.request.Documen
 import brama.consultant_business_api.domain.documentcategory.dto.request.DocumentCategoryUpdateRequest;
 import brama.consultant_business_api.domain.projecttype.dto.request.ProjectTypeCreateRequest;
 import brama.consultant_business_api.domain.projecttype.dto.request.ProjectTypeUpdateRequest;
+import brama.consultant_business_api.domain.settings.catalog.SettingsCatalogDefaults;
 import brama.consultant_business_api.domain.settings.catalog.model.SettingsCatalog;
 import brama.consultant_business_api.domain.settings.catalog.model.SettingsPriority;
 import brama.consultant_business_api.domain.settings.catalog.model.SettingsProjectStatus;
@@ -31,6 +32,7 @@ import brama.consultant_business_api.common.ApiError;
 import brama.consultant_business_api.exception.EntityNotFoundException;
 import brama.consultant_business_api.exception.RequestValidationException;
 import brama.consultant_business_api.repository.SettingsCatalogRepository;
+import brama.consultant_business_api.repository.ProjectRepository;
 import brama.consultant_business_api.role.Role;
 import brama.consultant_business_api.role.RoleRepository;
 import brama.consultant_business_api.service.contracttype.ContractTypeService;
@@ -53,8 +55,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SettingsServiceImpl implements SettingsService {
-    private static final String CATALOG_ID = "catalog";
-
     private final DocumentCategoryService documentCategoryService;
     private final ProjectTypeService projectTypeService;
     private final ContractTypeService contractTypeService;
@@ -62,6 +62,7 @@ public class SettingsServiceImpl implements SettingsService {
     private final NotificationSettingsService notificationSettingsService;
     private final SettingsCatalogRepository settingsCatalogRepository;
     private final RoleRepository roleRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     public SettingsResponse getAll() {
@@ -84,6 +85,15 @@ public class SettingsServiceImpl implements SettingsService {
         if (request == null) {
             return getAll();
         }
+        if (isTrue(request.getReplaceAll())) {
+            request.setReplaceDocumentCategories(true);
+            request.setReplaceProjectTypes(true);
+            request.setReplaceContractTypes(true);
+            request.setReplaceProjectStatuses(true);
+            request.setReplacePriorities(true);
+            request.setReplaceTags(true);
+            request.setReplaceRoles(true);
+        }
         validatePatchRequest(request);
 
         if (isTrue(request.getReplaceDocumentCategories())) {
@@ -94,12 +104,12 @@ public class SettingsServiceImpl implements SettingsService {
         if (isTrue(request.getReplaceProjectTypes())) {
             projectTypeService.deleteAll();
         } else {
-            deleteIfPresent(request.getProjectTypeDeletes(), projectTypeService::delete);
+            deleteProjectTypesIfUnused(request.getProjectTypeDeletes());
         }
         if (isTrue(request.getReplaceContractTypes())) {
             contractTypeService.deleteAll();
         } else {
-            deleteIfPresent(request.getContractTypeDeletes(), contractTypeService::delete);
+            deleteContractTypesIfUnused(request.getContractTypeDeletes());
         }
 
         if (request.getDocumentCategories() != null) {
@@ -124,17 +134,17 @@ public class SettingsServiceImpl implements SettingsService {
             if (isTrue(request.getReplaceProjectStatuses())) {
                 catalog.setProjectStatuses(new ArrayList<>());
             } else {
-                deleteIfPresent(request.getProjectStatusDeletes(), id -> removeById(catalog.getProjectStatuses(), id));
+                deleteProjectStatusesIfUnused(catalog, request.getProjectStatusDeletes());
             }
             if (isTrue(request.getReplacePriorities())) {
                 catalog.setPriorities(new ArrayList<>());
             } else {
-                deleteIfPresent(request.getPriorityDeletes(), id -> removeById(catalog.getPriorities(), id));
+                deletePrioritiesIfUnused(catalog, request.getPriorityDeletes());
             }
             if (isTrue(request.getReplaceTags())) {
                 catalog.setTags(new ArrayList<>());
             } else {
-                deleteIfPresent(request.getTagDeletes(), id -> removeById(catalog.getTags(), id));
+                deleteTagsIfUnused(catalog, request.getTagDeletes());
             }
             upsertProjectStatuses(catalog, request.getProjectStatuses());
             upsertPriorities(catalog, request.getPriorities());
@@ -277,6 +287,72 @@ public class SettingsServiceImpl implements SettingsService {
             }
         }
     }
+
+    private void deleteProjectTypesIfUnused(final List<String> ids) {
+        deleteIfPresent(ids, id -> {
+            if (projectRepository.existsByProjectTypeId(id)) {
+                throw new RequestValidationException(List.of(ApiError.builder()
+                        .code("SETTING_IN_USE")
+                        .message("Project type is in use: " + id)
+                        .field("projectTypeDeletes")
+                        .build()));
+            }
+            projectTypeService.delete(id);
+        });
+    }
+
+    private void deleteContractTypesIfUnused(final List<String> ids) {
+        deleteIfPresent(ids, id -> {
+            if (projectRepository.existsByContractTypeId(id)) {
+                throw new RequestValidationException(List.of(ApiError.builder()
+                        .code("SETTING_IN_USE")
+                        .message("Contract type is in use: " + id)
+                        .field("contractTypeDeletes")
+                        .build()));
+            }
+            contractTypeService.delete(id);
+        });
+    }
+
+    private void deleteProjectStatusesIfUnused(final SettingsCatalog catalog, final List<String> ids) {
+        deleteIfPresent(ids, id -> {
+            if (projectRepository.existsByStatusId(id)) {
+                throw new RequestValidationException(List.of(ApiError.builder()
+                        .code("SETTING_IN_USE")
+                        .message("Project status is in use: " + id)
+                        .field("projectStatusDeletes")
+                        .build()));
+            }
+            removeById(catalog.getProjectStatuses(), id);
+        });
+    }
+
+    private void deletePrioritiesIfUnused(final SettingsCatalog catalog, final List<String> ids) {
+        deleteIfPresent(ids, id -> {
+            if (projectRepository.existsByPriorityId(id)) {
+                throw new RequestValidationException(List.of(ApiError.builder()
+                        .code("SETTING_IN_USE")
+                        .message("Priority is in use: " + id)
+                        .field("priorityDeletes")
+                        .build()));
+            }
+            removeById(catalog.getPriorities(), id);
+        });
+    }
+
+    private void deleteTagsIfUnused(final SettingsCatalog catalog, final List<String> ids) {
+        deleteIfPresent(ids, id -> {
+            if (projectRepository.existsByTagIdsContaining(id)) {
+                throw new RequestValidationException(List.of(ApiError.builder()
+                        .code("SETTING_IN_USE")
+                        .message("Tag is in use: " + id)
+                        .field("tagDeletes")
+                        .build()));
+            }
+            removeById(catalog.getTags(), id);
+        });
+    }
+
 
     private boolean isBlank(final String value) {
         return value == null || value.trim().isEmpty();
@@ -436,59 +512,13 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     private SettingsCatalog getCatalogForRead() {
-        return settingsCatalogRepository.findById(CATALOG_ID)
-                .orElseGet(this::defaultCatalog);
+        return settingsCatalogRepository.findById(SettingsCatalogDefaults.CATALOG_ID)
+                .orElseGet(SettingsCatalogDefaults::defaultCatalog);
     }
 
     private SettingsCatalog getCatalogForWrite() {
-        return settingsCatalogRepository.findById(CATALOG_ID)
-                .orElseGet(() -> {
-                    SettingsCatalog catalog = defaultCatalog();
-                    catalog.setId(CATALOG_ID);
-                    return catalog;
-                });
-    }
-
-    private SettingsCatalog defaultCatalog() {
-        return SettingsCatalog.builder()
-                .id(CATALOG_ID)
-                .projectStatuses(defaultProjectStatuses())
-                .priorities(defaultPriorities())
-                .tags(defaultTags())
-                .build();
-    }
-
-    private List<SettingsProjectStatus> defaultProjectStatuses() {
-        List<SettingsProjectStatus> statuses = new ArrayList<>();
-        statuses.add(SettingsProjectStatus.builder().id("draft").key("draft").name("Draft").color("bg-muted").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("discovery").key("discovery").name("Discovery").color("bg-primary").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("approved").key("approved").name("Approved").color("bg-health-green").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("delivery").key("delivery").name("Delivery").color("bg-primary").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("review").key("review").name("Review").color("bg-health-amber").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("delivered").key("delivered").name("Delivered").color("bg-health-green").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("closed").key("closed").name("Closed").color("bg-muted").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("on-hold").key("on-hold").name("On Hold").color("bg-muted").category("project").build());
-        statuses.add(SettingsProjectStatus.builder().id("cancelled").key("cancelled").name("Cancelled").color("bg-health-red").category("project").build());
-        return statuses;
-    }
-
-    private List<SettingsPriority> defaultPriorities() {
-        List<SettingsPriority> priorities = new ArrayList<>();
-        priorities.add(SettingsPriority.builder().id("must").key("must").name("Must").color("bg-health-red").build());
-        priorities.add(SettingsPriority.builder().id("should").key("should").name("Should").color("bg-health-amber").build());
-        priorities.add(SettingsPriority.builder().id("could").key("could").name("Could").color("bg-primary").build());
-        return priorities;
-    }
-
-    private List<SettingsTag> defaultTags() {
-        List<SettingsTag> tags = new ArrayList<>();
-        tags.add(SettingsTag.builder().id("enterprise").name("enterprise").color("text-primary").build());
-        tags.add(SettingsTag.builder().id("tech").name("tech").color("text-blue-400").build());
-        tags.add(SettingsTag.builder().id("strategic").name("strategic").color("text-health-green").build());
-        tags.add(SettingsTag.builder().id("finance").name("finance").color("text-health-amber").build());
-        tags.add(SettingsTag.builder().id("health").name("health").color("text-pink-400").build());
-        tags.add(SettingsTag.builder().id("compliance").name("compliance").color("text-purple-400").build());
-        return tags;
+        return settingsCatalogRepository.findById(SettingsCatalogDefaults.CATALOG_ID)
+                .orElseGet(SettingsCatalogDefaults::defaultCatalog);
     }
 
     private void upsertProjectStatuses(final SettingsCatalog catalog, final List<ProjectStatusUpsertRequest> items) {

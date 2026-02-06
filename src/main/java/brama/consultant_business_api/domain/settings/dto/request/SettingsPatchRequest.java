@@ -24,6 +24,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SettingsPatchRequest {
+    private Boolean replaceAll;
+
     @Valid
     private List<DocumentCategoryUpsertRequest> documentCategories;
     private List<String> documentCategoryDeletes;

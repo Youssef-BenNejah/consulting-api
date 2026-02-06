@@ -7,11 +7,14 @@ import brama.consultant_business_api.domain.dashboard.dto.response.ProjectsByHea
 import brama.consultant_business_api.domain.invoice.enums.InvoiceStatus;
 import brama.consultant_business_api.domain.invoice.model.Invoice;
 import brama.consultant_business_api.domain.project.enums.HealthStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
 import brama.consultant_business_api.domain.project.model.Project;
+import brama.consultant_business_api.domain.settings.catalog.SettingsCatalogDefaults;
+import brama.consultant_business_api.domain.settings.catalog.model.SettingsCatalog;
+import brama.consultant_business_api.domain.settings.catalog.model.SettingsProjectStatus;
 import brama.consultant_business_api.repository.ClientRepository;
 import brama.consultant_business_api.repository.InvoiceRepository;
 import brama.consultant_business_api.repository.ProjectRepository;
+import brama.consultant_business_api.repository.SettingsCatalogRepository;
 import brama.consultant_business_api.service.dashboard.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final ClientRepository clientRepository;
     private final ProjectRepository projectRepository;
     private final InvoiceRepository invoiceRepository;
+    private final SettingsCatalogRepository settingsCatalogRepository;
     private final AtomicReference<CachedSummary> summaryCache = new AtomicReference<>();
 
     @Override
@@ -44,10 +48,15 @@ public class DashboardServiceImpl implements DashboardService {
         final long totalClients = clientRepository.count();
 
         final List<Project> projects = projectRepository.findAll();
+        final SettingsCatalog catalog = settingsCatalogRepository.findById(SettingsCatalogDefaults.CATALOG_ID)
+                .orElseGet(SettingsCatalogDefaults::defaultCatalog);
+        final String closedId = resolveStatusIdByKey(catalog, "closed");
+        final String cancelledId = resolveStatusIdByKey(catalog, "cancelled");
+        final String deliveredId = resolveStatusIdByKey(catalog, "delivered");
         final long activeProjects = projects.stream()
-                .filter(p -> p.getStatus() != ProjectStatus.CLOSED
-                        && p.getStatus() != ProjectStatus.CANCELLED
-                        && p.getStatus() != ProjectStatus.DELIVERED)
+                .filter(p -> !matchesStatus(p.getStatusId(), closedId)
+                        && !matchesStatus(p.getStatusId(), cancelledId)
+                        && !matchesStatus(p.getStatusId(), deliveredId))
                 .count();
         final long green = projects.stream().filter(p -> p.getHealthStatus() == HealthStatus.GREEN).count();
         final long amber = projects.stream().filter(p -> p.getHealthStatus() == HealthStatus.AMBER).count();
@@ -117,5 +126,21 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private record CachedSummary(DashboardSummaryResponse summary, Instant cachedAt) {
+    }
+
+    private String resolveStatusIdByKey(final SettingsCatalog catalog, final String key) {
+        if (catalog == null || catalog.getProjectStatuses() == null || key == null) {
+            return null;
+        }
+        for (SettingsProjectStatus status : catalog.getProjectStatuses()) {
+            if (status != null && status.getKey() != null && status.getKey().equalsIgnoreCase(key)) {
+                return status.getId();
+            }
+        }
+        return null;
+    }
+
+    private boolean matchesStatus(final String statusId, final String targetId) {
+        return statusId != null && targetId != null && statusId.equals(targetId);
     }
 }

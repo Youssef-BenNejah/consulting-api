@@ -5,16 +5,16 @@ import brama.consultant_business_api.domain.project.dto.request.ProjectCreateReq
 import brama.consultant_business_api.domain.project.dto.request.ProjectUpdateRequest;
 import brama.consultant_business_api.domain.project.dto.response.ProjectResponse;
 import brama.consultant_business_api.domain.project.enums.HealthStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectType;
 
 import java.time.LocalDate;
 
 public interface ProjectService {
     PagedResult<ProjectResponse> search(String search,
-                                        ProjectStatus status,
+                                        String statusId,
                                         String clientId,
-                                        ProjectType type,
+                                        String projectTypeId,
+                                        String priorityId,
+                                        String tagId,
                                         HealthStatus healthStatus,
                                         LocalDate dateFrom,
                                         LocalDate dateTo,

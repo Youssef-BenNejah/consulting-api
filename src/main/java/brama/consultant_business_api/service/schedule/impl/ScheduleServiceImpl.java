@@ -3,7 +3,6 @@ package brama.consultant_business_api.service.schedule.impl;
 import brama.consultant_business_api.common.PagedResult;
 import brama.consultant_business_api.common.PaginationUtils;
 import brama.consultant_business_api.common.QueryUtils;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
 import brama.consultant_business_api.domain.project.model.Project;
 import brama.consultant_business_api.domain.schedule.dto.request.ScheduleCreateRequest;
 import brama.consultant_business_api.domain.schedule.dto.request.ScheduleUpdateRequest;
@@ -40,12 +39,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     public PagedResult<ScheduleResponse> search(final String search,
                                                 final String clientId,
                                                 final String projectId,
-                                                final ProjectStatus projectStatus,
+                                                final String projectStatusId,
                                                 final LocalDate dateFrom,
                                                 final LocalDate dateTo,
                                                 final Integer page,
                                                 final Integer size) {
-        final Query query = buildQuery(search, clientId, projectId, projectStatus, dateFrom, dateTo);
+        final Query query = buildQuery(search, clientId, projectId, projectStatusId, dateFrom, dateTo);
         final long total = mongoTemplate.count(query, ProjectSchedule.class);
         final Pageable pageable = PaginationUtils.toPageable(page, size, null);
         query.with(pageable);
@@ -99,10 +98,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     public byte[] exportCsv(final String search,
                             final String clientId,
                             final String projectId,
-                            final ProjectStatus projectStatus,
+                            final String projectStatusId,
                             final LocalDate dateFrom,
                             final LocalDate dateTo) {
-        final Query query = buildQuery(search, clientId, projectId, projectStatus, dateFrom, dateTo);
+        final Query query = buildQuery(search, clientId, projectId, projectStatusId, dateFrom, dateTo);
         final List<ProjectSchedule> schedules = mongoTemplate.find(query, ProjectSchedule.class);
         final StringBuilder sb = new StringBuilder();
         sb.append("project_id,project_name,client_id,client_name,schedule_start_date,schedule_end_date,schedule_duration_days,schedule_color,is_scheduled,reminder_enabled\n");
@@ -125,16 +124,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     private Query buildQuery(final String search,
                              final String clientId,
                              final String projectId,
-                             final ProjectStatus projectStatus,
+                             final String projectStatusId,
                              final LocalDate dateFrom,
                              final LocalDate dateTo) {
         final Query query = new Query();
         QueryUtils.addRegexOrCriteria(query, search, "projectName", "clientName", "scheduleNotes");
         QueryUtils.addIfNotBlank(query, "clientId", clientId);
 
-        if (projectStatus != null) {
+        if (projectStatusId != null && !projectStatusId.isBlank()) {
             final List<String> projectIds = projectRepository.findAll().stream()
-                    .filter(project -> project.getStatus() == projectStatus)
+                    .filter(project -> projectStatusId.equals(project.getStatusId()))
                     .map(Project::getId)
                     .collect(Collectors.toList());
             if (projectIds.isEmpty()) {

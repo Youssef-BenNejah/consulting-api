@@ -1,8 +1,6 @@
 package brama.consultant_business_api.domain.project.dto.request;
 
 import brama.consultant_business_api.domain.project.enums.HealthStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectStatus;
-import brama.consultant_business_api.domain.project.enums.ProjectType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,10 +35,13 @@ public class ProjectCreateRequest {
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;
-    @NotNull
-    private ProjectStatus status;
-    @NotNull
-    private ProjectType type;
+    @NotBlank
+    private String statusId;
+    @NotBlank
+    private String projectTypeId;
+    private String priorityId;
+    private List<String> tagIds;
+    private String contractTypeId;
     @NotNull
     @PositiveOrZero
     private Double clientBudget;
