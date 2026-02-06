@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.List;
+
 @Document(collection = "roles")
 @Getter
 @Setter
@@ -20,5 +22,11 @@ public class Role extends BaseDocument {
     @Field("name")
     @Indexed(unique = true)
     private String name;
+
+    @Field("description")
+    private String description;
+
+    @Field("permissions")
+    private List<String> permissions;
 }
 

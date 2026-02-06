@@ -16,4 +16,6 @@ public interface ProjectTypeService {
     ProjectTypeResponse update(String id, ProjectTypeUpdateRequest request);
 
     void delete(String id);
+
+    void deleteAll();
 }

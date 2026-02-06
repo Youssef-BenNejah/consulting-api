@@ -57,4 +57,9 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

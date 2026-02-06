@@ -16,4 +16,6 @@ public interface DocumentCategoryService {
     DocumentCategoryResponse update(String id, DocumentCategoryUpdateRequest request);
 
     void delete(String id);
+
+    void deleteAll();
 }

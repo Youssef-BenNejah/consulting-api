@@ -27,4 +27,10 @@ public class GeneralSettings extends BaseDocument {
 
     @Field("default_currency")
     private String defaultCurrency;
+
+    @Field("dark_mode")
+    private Boolean darkMode;
+
+    @Field("compact_mode")
+    private Boolean compactMode;
 }

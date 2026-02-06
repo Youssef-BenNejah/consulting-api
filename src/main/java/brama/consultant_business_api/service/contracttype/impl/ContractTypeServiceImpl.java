@@ -57,4 +57,9 @@ public class ContractTypeServiceImpl implements ContractTypeService {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

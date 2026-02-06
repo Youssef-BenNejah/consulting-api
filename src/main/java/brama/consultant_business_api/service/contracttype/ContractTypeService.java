@@ -16,4 +16,6 @@ public interface ContractTypeService {
     ContractTypeResponse update(String id, ContractTypeUpdateRequest request);
 
     void delete(String id);
+
+    void deleteAll();
 }

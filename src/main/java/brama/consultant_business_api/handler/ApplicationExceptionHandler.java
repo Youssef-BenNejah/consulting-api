@@ -6,6 +6,7 @@ import brama.consultant_business_api.common.ApiResponse;
 import brama.consultant_business_api.exception.BusinessException;
 import brama.consultant_business_api.exception.EntityNotFoundException;
 import brama.consultant_business_api.exception.ErrorCode;
+import brama.consultant_business_api.exception.RequestValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,14 @@ import java.util.List;
 @Slf4j
 
 public class ApplicationExceptionHandler {
+    @ExceptionHandler(RequestValidationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleRequestValidationException(final RequestValidationException ex) {
+        log.info("Request validation exception {}", ex.getMessage());
+        log.debug(ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getErrors()));
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessException(final BusinessException ex) {
         final ApiError error = ApiError.builder()
@@ -122,6 +133,18 @@ public class ApplicationExceptionHandler {
         log.info("Illegal argument exception {}", ex.getMessage());
         log.debug(ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(List.of(error)));
+    }
+
+    @ExceptionHandler({DuplicateKeyException.class, DataIntegrityViolationException.class})
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateKey(final Exception ex) {
+        final ApiError error = ApiError.builder()
+                .code("DUPLICATE_KEY")
+                .message("Duplicate key error")
+                .build();
+        log.info("Duplicate key exception {}", ex.getMessage());
+        log.debug(ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(List.of(error)));
     }
 

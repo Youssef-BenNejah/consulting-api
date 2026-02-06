@@ -16,6 +16,8 @@ public class GeneralSettingsMapper {
                 .email(request.getEmail())
                 .timezone(request.getTimezone())
                 .defaultCurrency(request.getDefaultCurrency())
+                .darkMode(request.getDarkMode())
+                .compactMode(request.getCompactMode())
                 .build();
     }
 
@@ -23,10 +25,24 @@ public class GeneralSettingsMapper {
         if (settings == null || request == null) {
             return;
         }
-        settings.setCompanyName(request.getCompanyName());
-        settings.setEmail(request.getEmail());
-        settings.setTimezone(request.getTimezone());
-        settings.setDefaultCurrency(request.getDefaultCurrency());
+        if (request.getCompanyName() != null) {
+            settings.setCompanyName(request.getCompanyName());
+        }
+        if (request.getEmail() != null) {
+            settings.setEmail(request.getEmail());
+        }
+        if (request.getTimezone() != null) {
+            settings.setTimezone(request.getTimezone());
+        }
+        if (request.getDefaultCurrency() != null) {
+            settings.setDefaultCurrency(request.getDefaultCurrency());
+        }
+        if (request.getDarkMode() != null) {
+            settings.setDarkMode(request.getDarkMode());
+        }
+        if (request.getCompactMode() != null) {
+            settings.setCompactMode(request.getCompactMode());
+        }
     }
 
     public GeneralSettingsResponse toResponse(final GeneralSettings settings) {
@@ -38,6 +54,8 @@ public class GeneralSettingsMapper {
                 .email(settings.getEmail())
                 .timezone(settings.getTimezone())
                 .defaultCurrency(settings.getDefaultCurrency())
+                .darkMode(settings.getDarkMode())
+                .compactMode(settings.getCompactMode())
                 .build();
     }
 }

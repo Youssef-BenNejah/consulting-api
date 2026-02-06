@@ -16,4 +16,6 @@ public class GeneralSettingsPatchRequest {
     private String email;
     private String timezone;
     private String defaultCurrency;
+    private Boolean darkMode;
+    private Boolean compactMode;
 }

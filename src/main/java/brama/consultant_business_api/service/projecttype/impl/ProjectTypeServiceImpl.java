@@ -57,4 +57,9 @@ public class ProjectTypeServiceImpl implements ProjectTypeService {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

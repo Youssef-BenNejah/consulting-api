@@ -28,8 +28,15 @@ public class GeneralSettingsServiceImpl implements GeneralSettingsService {
     public GeneralSettingsResponse update(final GeneralSettingsUpdateRequest request) {
         final GeneralSettings settings = repository.findById(SETTINGS_ID)
                 .orElseGet(() -> {
-                    GeneralSettings created = mapper.toEntity(request);
-                    created.setId(SETTINGS_ID);
+                    GeneralSettings created = GeneralSettings.builder()
+                            .id(SETTINGS_ID)
+                            .companyName("Cherif Consulting")
+                            .email(null)
+                            .timezone("Europe/Paris")
+                            .defaultCurrency("EUR")
+                            .darkMode(true)
+                            .compactMode(false)
+                            .build();
                     return created;
                 });
         mapper.merge(settings, request);
@@ -42,6 +49,8 @@ public class GeneralSettingsServiceImpl implements GeneralSettingsService {
                 .email(null)
                 .timezone("Europe/Paris")
                 .defaultCurrency("EUR")
+                .darkMode(true)
+                .compactMode(false)
                 .build();
     }
 }

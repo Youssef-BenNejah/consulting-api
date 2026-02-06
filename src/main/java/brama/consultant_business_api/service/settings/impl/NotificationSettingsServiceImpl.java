@@ -28,8 +28,14 @@ public class NotificationSettingsServiceImpl implements NotificationSettingsServ
     public NotificationSettingsResponse update(final NotificationSettingsUpdateRequest request) {
         final NotificationSettings settings = repository.findById(SETTINGS_ID)
                 .orElseGet(() -> {
-                    NotificationSettings created = mapper.toEntity(request);
-                    created.setId(SETTINGS_ID);
+                    NotificationSettings created = NotificationSettings.builder()
+                            .id(SETTINGS_ID)
+                            .emailNotifications(true)
+                            .slackIntegration(false)
+                            .milestoneReminders(true)
+                            .invoiceDueAlerts(true)
+                            .weeklyDigest(true)
+                            .build();
                     return created;
                 });
         mapper.merge(settings, request);

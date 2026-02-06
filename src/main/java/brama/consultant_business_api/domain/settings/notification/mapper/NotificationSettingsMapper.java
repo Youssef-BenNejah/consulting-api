@@ -24,11 +24,21 @@ public class NotificationSettingsMapper {
         if (settings == null || request == null) {
             return;
         }
-        settings.setEmailNotifications(request.getEmailNotifications());
-        settings.setSlackIntegration(request.getSlackIntegration());
-        settings.setMilestoneReminders(request.getMilestoneReminders());
-        settings.setInvoiceDueAlerts(request.getInvoiceDueAlerts());
-        settings.setWeeklyDigest(request.getWeeklyDigest());
+        if (request.getEmailNotifications() != null) {
+            settings.setEmailNotifications(request.getEmailNotifications());
+        }
+        if (request.getSlackIntegration() != null) {
+            settings.setSlackIntegration(request.getSlackIntegration());
+        }
+        if (request.getMilestoneReminders() != null) {
+            settings.setMilestoneReminders(request.getMilestoneReminders());
+        }
+        if (request.getInvoiceDueAlerts() != null) {
+            settings.setInvoiceDueAlerts(request.getInvoiceDueAlerts());
+        }
+        if (request.getWeeklyDigest() != null) {
+            settings.setWeeklyDigest(request.getWeeklyDigest());
+        }
     }
 
     public NotificationSettingsResponse toResponse(final NotificationSettings settings) {
