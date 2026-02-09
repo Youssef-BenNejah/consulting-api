@@ -16,4 +16,5 @@ public class ContractTypeResponse {
     private String name;
     private String key;
     private String description;
+
 }

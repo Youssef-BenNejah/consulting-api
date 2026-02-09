@@ -11,6 +11,7 @@ import brama.consultant_business_api.domain.invoice.enums.InvoiceStatus;
 import brama.consultant_business_api.domain.invoice.mapper.InvoiceMapper;
 import brama.consultant_business_api.domain.invoice.model.Invoice;
 import brama.consultant_business_api.domain.invoice.model.InvoiceItem;
+import brama.consultant_business_api.domain.dashboard.dto.response.FinancialsResponse;
 import brama.consultant_business_api.exception.BusinessException;
 import brama.consultant_business_api.exception.EntityNotFoundException;
 import brama.consultant_business_api.exception.ErrorCode;
@@ -132,6 +133,29 @@ public class InvoiceServiceImpl implements InvoiceService {
         } catch (Exception ex) {
             throw new BusinessException(ErrorCode.INTERNAL_EXCEPTION, ex.getMessage());
         }
+    }
+
+    @Override
+    public FinancialsResponse getProjectFinancials(final String projectId) {
+        final Query query = new Query();
+        QueryUtils.addIfNotBlank(query, "projectId", projectId);
+        final List<Invoice> invoices = mongoTemplate.find(query, Invoice.class);
+        final double totalBilled = invoices.stream()
+                .mapToDouble(i -> i.getAmount() != null ? i.getAmount() : 0D)
+                .sum();
+        final double totalReceived = invoices.stream()
+                .filter(i -> i.getStatus() == InvoiceStatus.PAID)
+                .mapToDouble(i -> i.getAmount() != null ? i.getAmount() : 0D)
+                .sum();
+        final double outstandingReceivables = invoices.stream()
+                .filter(i -> i.getStatus() == InvoiceStatus.SENT || i.getStatus() == InvoiceStatus.OVERDUE)
+                .mapToDouble(i -> i.getAmount() != null ? i.getAmount() : 0D)
+                .sum();
+        return FinancialsResponse.builder()
+                .totalBilled(totalBilled)
+                .totalReceived(totalReceived)
+                .outstandingReceivables(outstandingReceivables)
+                .build();
     }
 
     private void normalizeInvoice(final Invoice invoice) {

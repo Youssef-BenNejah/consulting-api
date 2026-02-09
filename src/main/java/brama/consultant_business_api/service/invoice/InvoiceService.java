@@ -5,6 +5,7 @@ import brama.consultant_business_api.domain.invoice.dto.request.InvoiceCreateReq
 import brama.consultant_business_api.domain.invoice.dto.request.InvoiceUpdateRequest;
 import brama.consultant_business_api.domain.invoice.dto.response.InvoiceResponse;
 import brama.consultant_business_api.domain.invoice.enums.InvoiceStatus;
+import brama.consultant_business_api.domain.dashboard.dto.response.FinancialsResponse;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,4 +32,6 @@ public interface InvoiceService {
     void delete(String id);
 
     byte[] exportInvoices(List<String> ids);
+
+    FinancialsResponse getProjectFinancials(String projectId);
 }

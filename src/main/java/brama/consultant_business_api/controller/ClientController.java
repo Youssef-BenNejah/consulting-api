@@ -7,7 +7,9 @@ import brama.consultant_business_api.common.PaginationUtils;
 import brama.consultant_business_api.domain.client.dto.request.ClientCreateRequest;
 import brama.consultant_business_api.domain.client.dto.request.ClientUpdateRequest;
 import brama.consultant_business_api.domain.client.dto.response.ClientResponse;
+import brama.consultant_business_api.domain.project.dto.response.ProjectResponse;
 import brama.consultant_business_api.service.client.ClientService;
+import brama.consultant_business_api.service.project.ProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.List;
 @Tag(name = "Clients", description = "Client API")
 public class ClientController {
     private final ClientService service;
+    private final ProjectService projectService;
 
     @GetMapping
     public ApiResponse<List<ClientResponse>> listClients(
@@ -62,5 +65,20 @@ public class ClientController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClient(@PathVariable final String id) {
         service.delete(id);
+    }
+
+    @GetMapping("/{clientId}/projects")
+    public ApiResponse<List<ProjectResponse>> getProjectsByClientId(@PathVariable final String clientId,
+                                                                    @RequestParam(required = false) final Integer page,
+                                                                    @RequestParam(required = false) final Integer size,
+                                                                    @RequestParam(required = false) final String sort) {
+        final PagedResult<ProjectResponse> result = projectService.search(
+                null, null, clientId, null, null, null, null, null, null, page, size, sort);
+        final PageMeta meta = PageMeta.builder()
+                .page(PaginationUtils.normalizePage(page))
+                .size(PaginationUtils.normalizeSize(size))
+                .total(result.getTotal())
+                .build();
+        return ApiResponse.of(result.getItems(), meta);
     }
 }
