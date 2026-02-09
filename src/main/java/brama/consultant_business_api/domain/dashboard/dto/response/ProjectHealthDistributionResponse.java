@@ -11,11 +11,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DashboardNotification {
-    private String id;
-    private String type;
-    private String icon;
-    private String title;
-    private String description;
-    private String link;
+public class ProjectHealthDistributionResponse {
+    private long green;
+    private long amber;
+    private long red;
+    private long total;
 }

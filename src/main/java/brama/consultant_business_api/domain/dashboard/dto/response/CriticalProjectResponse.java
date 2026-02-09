@@ -1,5 +1,6 @@
 package brama.consultant_business_api.domain.dashboard.dto.response;
 
+import brama.consultant_business_api.domain.project.enums.HealthStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,11 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DashboardNotification {
+public class CriticalProjectResponse {
     private String id;
-    private String type;
-    private String icon;
-    private String title;
-    private String description;
-    private String link;
+    private String name;
+    private String clientName;
+    private HealthStatus healthStatus;
+    private Integer progress;
+    private long openIssues;
 }

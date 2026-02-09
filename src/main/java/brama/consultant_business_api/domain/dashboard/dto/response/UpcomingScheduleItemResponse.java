@@ -6,16 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DashboardNotification {
+public class UpcomingScheduleItemResponse {
     private String id;
-    private String type;
-    private String icon;
-    private String title;
-    private String description;
-    private String link;
+    private String projectName;
+    private String clientName;
+    private LocalDate scheduleStartDate;
+    private LocalDate scheduleEndDate;
+    private String scheduleColor;
+    private long daysUntilStart;
 }

@@ -6,16 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DashboardNotification {
-    private String id;
-    private String type;
-    private String icon;
-    private String title;
-    private String description;
-    private String link;
+public class DashboardNotificationsResponse {
+    private List<DashboardNotification> notifications;
+    private long total;
 }

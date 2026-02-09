@@ -38,4 +38,5 @@ public class ReportsController {
     public ApiResponse<InvoicesReportResponse> getInvoicesReport() {
         return ApiResponse.ok(service.getInvoicesReport());
     }
+
 }
