@@ -59,6 +59,20 @@ public class ScheduleController {
         return ApiResponse.ok(service.getById(id));
     }
 
+    @GetMapping("/project/{projectId}")
+    public ApiResponse<List<ScheduleResponse>> getSchedulesByProjectId(@PathVariable final String projectId,
+                                                                       @RequestParam(required = false) final Integer page,
+                                                                       @RequestParam(required = false) final Integer size) {
+        final PagedResult<ScheduleResponse> result = service.search(
+                null, null, projectId, null, null, null, page, size);
+        final PageMeta meta = PageMeta.builder()
+                .page(PaginationUtils.normalizePage(page))
+                .size(PaginationUtils.normalizeSize(size))
+                .total(result.getTotal())
+                .build();
+        return ApiResponse.of(result.getItems(), meta);
+    }
+
     @PatchMapping("/{id}")
     public ApiResponse<ScheduleResponse> updateSchedule(@PathVariable final String id,
                                                         @Valid @RequestBody final ScheduleUpdateRequest request) {
