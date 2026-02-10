@@ -671,14 +671,64 @@ Source: `src/main/java/brama/consultant_business_api/domain/contracttype/dto/res
 - `key`: `String`
 - `description`: `String`
 
+**DTO: `CostsSummaryResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/CostsSummaryResponse.java`
+- `category`: `out`
+- `totalBudget`: `double`
+- `totalCosts`: `double`
+
+**DTO: `CriticalProjectResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/CriticalProjectResponse.java`
+- `category`: `out`
+- `id`: `String`
+- `name`: `String`
+- `clientName`: `String`
+- `healthStatus`: `HealthStatus`
+- `progress`: `Integer`
+- `openIssues`: `long`
+
+**DTO: `DashboardFinancialsResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/DashboardFinancialsResponse.java`
+- `category`: `out`
+- `revenue`: `RevenueSummaryResponse`
+- `costs`: `CostsSummaryResponse`
+- `netMargin`: `double`
+- `currency`: `String`
+
 **DTO: `DashboardNotification`**
 Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/DashboardNotification.java`
 - `category`: `out`
 - `id`: `String`
 - `type`: `String`
+- `icon`: `String`
 - `title`: `String`
 - `description`: `String`
 - `link`: `String`
+
+**DTO: `DashboardNotificationsResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/DashboardNotificationsResponse.java`
+- `category`: `out`
+- `notifications`: `List<DashboardNotification>`
+- `total`: `long`
+
+**DTO: `DashboardProjectHealthResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/DashboardProjectHealthResponse.java`
+- `category`: `out`
+- `distribution`: `ProjectHealthDistributionResponse`
+- `criticalProjects`: `List<CriticalProjectResponse>`
+
+**DTO: `DashboardStatsResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/DashboardStatsResponse.java`
+- `category`: `out`
+- `totalClients`: `long`
+- `activeProjects`: `long`
+- `projectsByHealth`: `ProjectsByHealthResponse`
+- `financials`: `FinancialsResponse`
+- `pipeline`: `PipelineResponse`
+- `tasksOverdue`: `long`
+- `milestonesOverdue`: `long`
+- `openIssues`: `long`
+- `criticalRisks`: `long`
 
 **DTO: `DashboardSummaryResponse`**
 Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/DashboardSummaryResponse.java`
@@ -695,12 +745,51 @@ Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/respon
 - `totalReceived`: `double`
 - `outstandingReceivables`: `double`
 
+**DTO: `PipelineResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/PipelineResponse.java`
+- `category`: `out`
+- `totalValue`: `double`
+- `weightedValue`: `double`
+- `closingThisMonth`: `long`
+
+**DTO: `ProjectHealthDistributionResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/ProjectHealthDistributionResponse.java`
+- `category`: `out`
+- `green`: `long`
+- `amber`: `long`
+- `red`: `long`
+- `total`: `long`
+
 **DTO: `ProjectsByHealthResponse`**
 Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/ProjectsByHealthResponse.java`
 - `category`: `out`
 - `green`: `long`
 - `amber`: `long`
 - `red`: `long`
+
+**DTO: `RevenueSummaryResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/RevenueSummaryResponse.java`
+- `category`: `out`
+- `totalBilled`: `double`
+- `totalReceived`: `double`
+- `outstandingReceivables`: `double`
+
+**DTO: `UpcomingScheduleItemResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/UpcomingScheduleItemResponse.java`
+- `category`: `out`
+- `id`: `String`
+- `projectName`: `String`
+- `clientName`: `String`
+- `scheduleStartDate`: `LocalDate`
+- `scheduleEndDate`: `LocalDate`
+- `scheduleColor`: `String`
+- `daysUntilStart`: `long`
+
+**DTO: `UpcomingSchedulesResponse`**
+Source: `src/main/java/brama/consultant_business_api/domain/dashboard/dto/response/UpcomingSchedulesResponse.java`
+- `category`: `out`
+- `upcomingSchedules`: `List<UpcomingScheduleItemResponse>`
+- `total`: `long`
 
 **DTO: `DocumentCreateRequest`**
 Source: `src/main/java/brama/consultant_business_api/domain/document/dto/request/DocumentCreateRequest.java`
@@ -1518,10 +1607,46 @@ Source: `src/main/java/brama/consultant_business_api/user/request/ProfileUpdateR
 - **Description:** `N/A`
 - **Edge Cases:** `N/A`
 
-2) `GET /api/v1/dashboard/notifications`
+2) `GET /api/v1/dashboard/stats`
 - **Auth:** `public (no method-level restrictions detected)`
 - **Request:** `N/A`
-- **Response:** `ApiResponse<List<DashboardNotification>>`
+- **Response:** `ApiResponse<DashboardStatsResponse>`
+- **Status Codes:** `N/A (not explicitly defined in code)`
+- **Validation:** `See DTO annotations`
+- **Description:** `N/A`
+- **Edge Cases:** `N/A`
+
+3) `GET /api/v1/dashboard/project-health`
+- **Auth:** `public (no method-level restrictions detected)`
+- **Request:** `N/A`
+- **Response:** `ApiResponse<DashboardProjectHealthResponse>`
+- **Status Codes:** `N/A (not explicitly defined in code)`
+- **Validation:** `See DTO annotations`
+- **Description:** `N/A`
+- **Edge Cases:** `N/A`
+
+4) `GET /api/v1/dashboard/financials`
+- **Auth:** `public (no method-level restrictions detected)`
+- **Request:** `N/A`
+- **Response:** `ApiResponse<DashboardFinancialsResponse>`
+- **Status Codes:** `N/A (not explicitly defined in code)`
+- **Validation:** `See DTO annotations`
+- **Description:** `N/A`
+- **Edge Cases:** `N/A`
+
+5) `GET /api/v1/dashboard/notifications`
+- **Auth:** `public (no method-level restrictions detected)`
+- **Request:** `N/A`
+- **Response:** `ApiResponse<DashboardNotificationsResponse>`
+- **Status Codes:** `N/A (not explicitly defined in code)`
+- **Validation:** `See DTO annotations`
+- **Description:** `N/A`
+- **Edge Cases:** `N/A`
+
+6) `GET /api/v1/dashboard/upcoming-schedules`
+- **Auth:** `public (no method-level restrictions detected)`
+- **Request:** `N/A`
+- **Response:** `ApiResponse<UpcomingSchedulesResponse>`
 - **Status Codes:** `N/A (not explicitly defined in code)`
 - **Validation:** `See DTO annotations`
 - **Description:** `N/A`
@@ -1930,7 +2055,16 @@ Source: `src/main/java/brama/consultant_business_api/user/request/ProfileUpdateR
 - **Description:** `N/A`
 - **Edge Cases:** `N/A`
 
-4) `PATCH /api/v1/schedules/{id}`
+4) `GET /api/v1/schedules/project/{projectId}`
+- **Auth:** `public (no method-level restrictions detected)`
+- **Request:** `N/A`
+- **Response:** `ApiResponse<List<ScheduleResponse>>`
+- **Status Codes:** `N/A (not explicitly defined in code)`
+- **Validation:** `See DTO annotations`
+- **Description:** `N/A`
+- **Edge Cases:** `N/A`
+
+5) `PATCH /api/v1/schedules/{id}`
 - **Auth:** `public (no method-level restrictions detected)`
 - **Request:** `ScheduleUpdateRequest`
 - **Response:** `ApiResponse<ScheduleResponse>`
@@ -1939,7 +2073,7 @@ Source: `src/main/java/brama/consultant_business_api/user/request/ProfileUpdateR
 - **Description:** `N/A`
 - **Edge Cases:** `N/A`
 
-5) `DELETE /api/v1/schedules/{id}`
+6) `DELETE /api/v1/schedules/{id}`
 - **Auth:** `public (no method-level restrictions detected)`
 - **Request:** `N/A`
 - **Response:** `void`
@@ -1948,7 +2082,7 @@ Source: `src/main/java/brama/consultant_business_api/user/request/ProfileUpdateR
 - **Description:** `N/A`
 - **Edge Cases:** `N/A`
 
-6) `GET /api/v1/schedules/export`
+7) `GET /api/v1/schedules/export`
 - **Auth:** `public (no method-level restrictions detected)`
 - **Request:** `N/A`
 - **Response:** `N/A`
@@ -2143,7 +2277,11 @@ Source: `src/main/java/brama/consultant_business_api/user/request/ProfileUpdateR
 | ContractTypeController | PATCH | /api/v1/contract-types/{id} | public ApiResponse<ContractTypeResponse> updateContractType(@PathVariable final String id, |
 | ContractTypeController | DELETE | /api/v1/contract-types/{id} | public void deleteContractType(@PathVariable final String id) { |
 | DashboardController | GET | /api/v1/dashboard/summary | public ApiResponse<DashboardSummaryResponse> getSummary() { |
-| DashboardController | GET | /api/v1/dashboard/notifications | public ApiResponse<List<DashboardNotification>> getNotifications() { |
+| DashboardController | GET | /api/v1/dashboard/stats | public ApiResponse<DashboardStatsResponse> getStats() { |
+| DashboardController | GET | /api/v1/dashboard/project-health | public ApiResponse<DashboardProjectHealthResponse> getProjectHealth() { |
+| DashboardController | GET | /api/v1/dashboard/financials | public ApiResponse<DashboardFinancialsResponse> getFinancials() { |
+| DashboardController | GET | /api/v1/dashboard/notifications | public ApiResponse<DashboardNotificationsResponse> getNotifications() { |
+| DashboardController | GET | /api/v1/dashboard/upcoming-schedules | public ApiResponse<UpcomingSchedulesResponse> getUpcomingSchedules( |
 | DocumentCategoryController | GET | /api/v1/document-categories | public ApiResponse<List<DocumentCategoryResponse>> listCategories() { |
 | DocumentCategoryController | POST | /api/v1/document-categories | public ApiResponse<DocumentCategoryResponse> createCategory(@Valid @RequestBody final DocumentCategoryCreateRequest request) { |
 | DocumentCategoryController | GET | /api/v1/document-categories/{id} | public ApiResponse<DocumentCategoryResponse> getCategory(@PathVariable final String id) { |
@@ -2184,6 +2322,7 @@ Source: `src/main/java/brama/consultant_business_api/user/request/ProfileUpdateR
 | ScheduleController | GET | /api/v1/schedules | public ApiResponse<List<ScheduleResponse>> listSchedules( |
 | ScheduleController | POST | /api/v1/schedules | public ApiResponse<ScheduleResponse> createSchedule(@Valid @RequestBody final ScheduleCreateRequest request) { |
 | ScheduleController | GET | /api/v1/schedules/{id} | public ApiResponse<ScheduleResponse> getSchedule(@PathVariable final String id) { |
+| ScheduleController | GET | /api/v1/schedules/project/{projectId} | public ApiResponse<List<ScheduleResponse>> getSchedulesByProjectId(@PathVariable final String projectId, |
 | ScheduleController | PATCH | /api/v1/schedules/{id} | public ApiResponse<ScheduleResponse> updateSchedule(@PathVariable final String id, |
 | ScheduleController | DELETE | /api/v1/schedules/{id} | public void deleteSchedule(@PathVariable final String id) { |
 | ScheduleController | GET | /api/v1/schedules/export | public ResponseEntity<byte[]> exportSchedules( |
