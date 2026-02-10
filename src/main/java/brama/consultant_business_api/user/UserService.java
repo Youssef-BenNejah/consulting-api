@@ -2,9 +2,12 @@ package brama.consultant_business_api.user;
 
 import brama.consultant_business_api.user.request.ChangePasswordRequest;
 import brama.consultant_business_api.user.request.ProfileUpdateRequest;
+import brama.consultant_business_api.user.response.UserProfileResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
+    UserProfileResponse getProfile(String userId);
+
     void updateProfileInfo(ProfileUpdateRequest request, String userId);
 
     void changePassword(ChangePasswordRequest request, String userId);
