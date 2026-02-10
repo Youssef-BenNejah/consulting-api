@@ -37,7 +37,7 @@ app:
   mail:
     from: ${MAIL_FROM:no-reply@consultant-business-api}
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://consultingcherif.netlify.app}
   security:
     otp:
       expiration-minutes: 10
