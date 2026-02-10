@@ -1,7 +1,9 @@
 package brama.consultant_business_api.user;
 
+import brama.consultant_business_api.common.ApiResponse;
 import brama.consultant_business_api.user.request.ChangePasswordRequest;
 import brama.consultant_business_api.user.request.ProfileUpdateRequest;
+import brama.consultant_business_api.user.response.UserProfileResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService service;
 
+    
+    @GetMapping("/me")
+    public ApiResponse<UserProfileResponse> getProfile(final Authentication principal) {
+        return ApiResponse.ok(this.service.getProfile(getUserId(principal)));
+    }
     @PatchMapping("/me")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void updateProfile(

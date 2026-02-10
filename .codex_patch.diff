@@ -1,0 +1,134 @@
+﻿diff --git a/src/main/java/brama/consultant_business_api/user/request/ProfileUpdateRequest.java b/src/main/java/brama/consultant_business_api/user/request/ProfileUpdateRequest.java
+--- a/src/main/java/brama/consultant_business_api/user/request/ProfileUpdateRequest.java
++++ b/src/main/java/brama/consultant_business_api/user/request/ProfileUpdateRequest.java
+@@
+-package brama.consultant_business_api.user.request;
+-
+-import lombok.*;
+-
+-import java.time.LocalDate;
++package brama.consultant_business_api.user.request;
++
++import com.fasterxml.jackson.annotation.JsonAlias;
++import lombok.*;
++
++import java.time.LocalDate;
+@@
+ public class ProfileUpdateRequest {
+     private String firstName;
+     private String lastName;
++    private String email;
++    @JsonAlias("phoneNumber")
++    private String phone;
++    private String company;
++    private String location;
++    private String bio;
+     private LocalDate dateOfBirth;
+ }
+
+diff --git a/src/main/java/brama/consultant_business_api/user/User.java b/src/main/java/brama/consultant_business_api/user/User.java
+--- a/src/main/java/brama/consultant_business_api/user/User.java
++++ b/src/main/java/brama/consultant_business_api/user/User.java
+@@
+     @Field("phone_number")
+     @Indexed(unique = true)
+     @NotNull
+     private String phoneNumber;
++
++    @Field("company")
++    private String company;
++
++    @Field("location")
++    private String location;
++
++    @Field("bio")
++    private String bio;
++
++    @Field("avatar_url")
++    private String avatarUrl;
+@@
+     @Field("password")
+     @NotNull
+     private String password;
+
+diff --git a/src/main/java/brama/consultant_business_api/user/UserMapper.java b/src/main/java/brama/consultant_business_api/user/UserMapper.java
+--- a/src/main/java/brama/consultant_business_api/user/UserMapper.java
++++ b/src/main/java/brama/consultant_business_api/user/UserMapper.java
+@@
+     public void mergeUserInfo(final User savedUser, final ProfileUpdateRequest request) {
+-        if(StringUtils.isNotBlank(request.getFirstName()) && !savedUser.getFirstName().equals(request.getFirstName())) {
++        if (StringUtils.isNotBlank(request.getFirstName())
++                && !StringUtils.equals(savedUser.getFirstName(), request.getFirstName())) {
+             savedUser.setFirstName(request.getFirstName());
+-
+         }
+-        if(StringUtils.isNotBlank(request.getLastName()) && !savedUser.getLastName().equals(request.getLastName())) {
++        if (StringUtils.isNotBlank(request.getLastName())
++                && !StringUtils.equals(savedUser.getLastName(), request.getLastName())) {
+             savedUser.setLastName(request.getLastName());
+-
+         }
+-        if(request.getDateOfBirth() != null && !request.getDateOfBirth().equals(savedUser.getDateOfBirth())) {
++        if (StringUtils.isNotBlank(request.getEmail())
++                && !StringUtils.equalsIgnoreCase(savedUser.getEmail(), request.getEmail())) {
++            savedUser.setEmail(request.getEmail());
++        }
++
++        if (StringUtils.isNotBlank(request.getPhone())
++                && !StringUtils.equals(savedUser.getPhoneNumber(), request.getPhone())) {
++            savedUser.setPhoneNumber(request.getPhone());
++        }
++
++        if (StringUtils.isNotBlank(request.getCompany())
++                && !StringUtils.equals(savedUser.getCompany(), request.getCompany())) {
++            savedUser.setCompany(request.getCompany());
++        }
++
++        if (StringUtils.isNotBlank(request.getLocation())
++                && !StringUtils.equals(savedUser.getLocation(), request.getLocation())) {
++            savedUser.setLocation(request.getLocation());
++        }
++
++        if (StringUtils.isNotBlank(request.getBio())
++                && !StringUtils.equals(savedUser.getBio(), request.getBio())) {
++            savedUser.setBio(request.getBio());
++        }
++
++        if (request.getDateOfBirth() != null
++                && !request.getDateOfBirth().equals(savedUser.getDateOfBirth())) {
+             savedUser.setDateOfBirth(request.getDateOfBirth());
+-
+         }
+     }
+ }
+
+diff --git a/src/main/java/brama/consultant_business_api/user/request/ChangePasswordRequest.java b/src/main/java/brama/consultant_business_api/user/request/ChangePasswordRequest.java
+--- a/src/main/java/brama/consultant_business_api/user/request/ChangePasswordRequest.java
++++ b/src/main/java/brama/consultant_business_api/user/request/ChangePasswordRequest.java
+@@
+-package brama.consultant_business_api.user.request;
+-
+-import lombok.*;
++package brama.consultant_business_api.user.request;
++
++import com.fasterxml.jackson.annotation.JsonAlias;
++import lombok.*;
+@@
+ public class ChangePasswordRequest {
+     private String currentPassword;
+     private String newPassword;
+-    private String confirmNewPassword;
++    @JsonAlias("confirmNewPassword")
++    private String confirmPassword;
+ }
+
+diff --git a/src/main/java/brama/consultant_business_api/user/impl/UserServiceImpl.java b/src/main/java/brama/consultant_business_api/user/impl/UserServiceImpl.java
+--- a/src/main/java/brama/consultant_business_api/user/impl/UserServiceImpl.java
++++ b/src/main/java/brama/consultant_business_api/user/impl/UserServiceImpl.java
+@@
+     public void changePassword(ChangePasswordRequest request, String userId) {
+         if (!request.getNewPassword()
+-                .equals(request.getConfirmNewPassword())) {
++                .equals(request.getConfirmPassword())) {
+             throw new BusinessException(CHANGE_PASSWORD_MISMATCH);
+         }

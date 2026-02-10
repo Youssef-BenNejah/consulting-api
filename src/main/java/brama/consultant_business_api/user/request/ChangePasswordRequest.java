@@ -1,5 +1,6 @@
 package brama.consultant_business_api.user.request;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 @Getter
@@ -10,6 +11,6 @@ import lombok.*;
 public class ChangePasswordRequest {
     private String currentPassword;
     private String newPassword;
-    private String confirmNewPassword;
+    @JsonAlias("confirmNewPassword")
+    private String confirmPassword;
 }
-

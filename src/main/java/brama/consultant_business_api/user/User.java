@@ -46,6 +46,18 @@ public class User implements UserDetails {
     @NotNull
     private String phoneNumber;
 
+    @Field("company")
+    private String company;
+
+    @Field("location")
+    private String location;
+
+    @Field("bio")
+    private String bio;
+
+    @Field("avatar_url")
+    private String avatarUrl;
+
     @Field("password")
     @NotNull
     private String password;
@@ -112,4 +124,6 @@ public class User implements UserDetails {
         return !this.credentialsExpired;
     }
 }
+
+
 

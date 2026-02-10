@@ -1,23 +1,21 @@
-package brama.consultant_business_api.user.request;
+package brama.consultant_business_api.user.response;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProfileUpdateRequest {
+public class UserProfileResponse {
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
-    @JsonAlias("phoneNumber")
     private String phone;
     private String company;
     private String location;
     private String bio;
-    private LocalDate dateOfBirth;
+    private String role;
+    private String avatarUrl;
 }
